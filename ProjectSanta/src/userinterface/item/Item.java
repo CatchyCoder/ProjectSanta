@@ -6,7 +6,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import projectsanta.main.SecretSanta;
+import projectsanta.main.ProjectSanta;
 
 import userinterface.page.Page;
 
@@ -24,14 +24,14 @@ public abstract class Item {
 	}
 	
 	public void setFont(int size) {
-		getComponent().setFont(new Font(SecretSanta.FONT, SecretSanta.FONT_STYLE, size));
+		getComponent().setFont(new Font(ProjectSanta.FONT, ProjectSanta.FONT_STYLE, size));
 	}
 	
 	public void setSizeAndLoc(JLabel textLabel) {
 		// Calculating how wide the JLabel should be (in pixels) using FontMetrics
 		int width = textLabel.getFontMetrics(textLabel.getFont()).stringWidth(textLabel.getText());
 		int fontSize = textLabel.getFont().getSize();
-		int height = (int) (fontSize * SecretSanta.FONT_SIZE_RATIO);
+		int height = (int) (fontSize * ProjectSanta.FONT_SIZE_RATIO);
 		textLabel.setBounds(xPos, yPos, width, height);
 	}
 	
@@ -42,7 +42,7 @@ public abstract class Item {
 		int widestCharWidth = textField.getFontMetrics(font).getMaxAdvance();
 		
 		int width = widestCharWidth * charLength;
-		int height = (int) (font.getSize() * SecretSanta.FONT_SIZE_RATIO);
+		int height = (int) (font.getSize() * ProjectSanta.FONT_SIZE_RATIO);
 		textField.setBounds(xPos, yPos, width, height);
 	}
 	

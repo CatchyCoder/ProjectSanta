@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import projectsanta.main.SecretSanta;
+import projectsanta.main.ProjectSanta;
 
 import userinterface.InteractiveComponent;
 import userinterface.page.Page;

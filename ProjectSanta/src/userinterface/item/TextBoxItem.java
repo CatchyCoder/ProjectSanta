@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JTextField;
 
-import projectsanta.main.SecretSanta;
+import projectsanta.main.ProjectSanta;
 import projectsanta.main.debug.Debug;
 
 import userinterface.InteractiveComponent;

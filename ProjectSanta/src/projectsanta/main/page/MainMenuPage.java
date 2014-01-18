@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import projectsanta.main.SecretSanta;
+import projectsanta.main.ProjectSanta;
 
 import userinterface.item.ButtonItem;
 import userinterface.item.InteractiveItem;
@@ -23,8 +23,8 @@ public class MainMenuPage extends Page {
 	
 	private static final long serialVersionUID = 1L;
 	
-	protected ButtonItem exitButton = new ButtonItem(this, SecretSanta.window.getWidth() - 22, 2, "exit.JPG", "exithover.JPG");
-	protected ButtonItem minimizeButton = new ButtonItem(this, SecretSanta.window.getWidth() - 52, 2, "minimize.JPG", "minimizehover.JPG");
+	protected ButtonItem exitButton = new ButtonItem(this, ProjectSanta.window.getWidth() - 22, 2, "exit.JPG", "exithover.JPG");
+	protected ButtonItem minimizeButton = new ButtonItem(this, ProjectSanta.window.getWidth() - 52, 2, "minimize.JPG", "minimizehover.JPG");
 	
 	// The title
 	private TextItem title = new TextItem(this, 20, 20, "Secret Santa", 42);
@@ -69,10 +69,10 @@ public class MainMenuPage extends Page {
 				while(!names[x].startsWith(".")) names[x] = names[x].substring(1, names[x].length()); // Removes the number
 				names[x] = names[x].substring(3, names[x].length()); // Removes the symbols ".) " (and following space)
 			}
-			SecretSanta.window.setVisiblePage(new ListCreationPage(names));
+			ProjectSanta.window.setVisiblePage(new ListCreationPage(names));
 		}
 		if(item == exitButton) System.exit(0);
-		else if(item == minimizeButton) SecretSanta.window.setExtendedState(JFrame.ICONIFIED);
+		else if(item == minimizeButton) ProjectSanta.window.setExtendedState(JFrame.ICONIFIED);
 	}
 	
 	@Override

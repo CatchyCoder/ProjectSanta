@@ -7,7 +7,7 @@ import projectsanta.main.page.MainMenuPage;
 
 import userinterface.window.Window;
 
-public class SecretSanta {
+public class ProjectSanta {
 	
 	/*
 	 * This program was made completely function in 4 days, with 915 lines of
@@ -43,7 +43,7 @@ public class SecretSanta {
 		
 	public static MainMenuPage mainPage = new MainMenuPage();
 	
-	public SecretSanta() {
+	public ProjectSanta() {
 		// Loading the Main Menu
 		window.setVisiblePage(mainPage);
 		

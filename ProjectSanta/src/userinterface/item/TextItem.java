@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
 
-import projectsanta.main.SecretSanta;
+import projectsanta.main.ProjectSanta;
 
 import userinterface.InteractiveComponent;
 import userinterface.page.Page;

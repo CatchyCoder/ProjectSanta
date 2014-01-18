@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import projectsanta.main.SecretSanta;
+import projectsanta.main.ProjectSanta;
 
 import userinterface.InteractiveComponent;
 import userinterface.item.ButtonItem;
@@ -29,7 +29,7 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 	
 	public Page() {
 		// Visual settings
-		this.setBounds(0, 0, SecretSanta.window.getWidth(), SecretSanta.window.getHeight());
+		this.setBounds(0, 0, ProjectSanta.window.getWidth(), ProjectSanta.window.getHeight());
 		this.setBackground(Color.WHITE);
 		this.setLayout(null);
 		this.setFocusable(true);
@@ -38,21 +38,21 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 	
 	public void addItem(Item item) {
 		// Adding JLabel to JPanel (Page), and to the Page's items list
-		SecretSanta.window.addEventListeners(item.getComponent());
+		ProjectSanta.window.addEventListeners(item.getComponent());
 		this.add(item.getComponent());
 		ITEMS.add(item);
 		item.getComponent().setVisible(true);
 		
-		SecretSanta.window.refreshScreen();
+		ProjectSanta.window.refreshScreen();
 	}
 	
 	public void removeItem(Item item) {
-		SecretSanta.window.removeEventListeners(item.getComponent());
+		ProjectSanta.window.removeEventListeners(item.getComponent());
 		this.remove(item.getComponent());
 		ITEMS.remove(item);
 		item = null;
 		
-		SecretSanta.window.refreshScreen();
+		ProjectSanta.window.refreshScreen();
 	}
 	
 	public void resetItemStates(MouseEvent event) {
@@ -115,7 +115,7 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 		// Below adds the ability to drag program around on screen
 		int x = event.getXOnScreen();
 		int y = event.getYOnScreen();
-		SecretSanta.window.setLocation(x - lastX, y - lastY);
+		ProjectSanta.window.setLocation(x - lastX, y - lastY);
 		resetItemStates(event);
 	}
 	

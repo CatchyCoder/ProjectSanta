@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
-import projectsanta.main.SecretSanta;
+import projectsanta.main.ProjectSanta;
 
 import userinterface.InteractiveComponent;
 import userinterface.item.ButtonItem;
@@ -16,8 +16,8 @@ public class ListCreationPage extends Page implements InteractiveComponent {
 	
 	private static final long serialVersionUID = 1L;
 	
-	protected ButtonItem exitButton = new ButtonItem(this, SecretSanta.window.getWidth() - 22, 2, "exit.jpg", "exithover.jpg");
-	protected ButtonItem minimizeButton = new ButtonItem(this, SecretSanta.window.getWidth() - 52, 2, "minimize.jpg", "minimizehover.jpg");
+	protected ButtonItem exitButton = new ButtonItem(this, ProjectSanta.window.getWidth() - 22, 2, "exit.jpg", "exithover.jpg");
+	protected ButtonItem minimizeButton = new ButtonItem(this, ProjectSanta.window.getWidth() - 52, 2, "minimize.jpg", "minimizehover.jpg");
 	
 	private final String[] NAMES;
 	
@@ -62,14 +62,14 @@ public class ListCreationPage extends Page implements InteractiveComponent {
 		super.handleMousePress(item);
 		
 		if(item == exitButton) System.exit(0);
-		else if(item == minimizeButton) SecretSanta.window.setExtendedState(JFrame.ICONIFIED);
+		else if(item == minimizeButton) ProjectSanta.window.setExtendedState(JFrame.ICONIFIED);
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent event) {
 		super.mousePressed(event);
 		
-		SecretSanta.window.setVisiblePage(SecretSanta.mainPage);
+		ProjectSanta.window.setVisiblePage(ProjectSanta.mainPage);
 	}
 
 	@Override
