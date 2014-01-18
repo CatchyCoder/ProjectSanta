@@ -16,8 +16,8 @@ public class ListCreationPage extends Page implements InteractiveComponent {
 	
 	private static final long serialVersionUID = 1L;
 	
-	protected ButtonItem exitButton = new ButtonItem(this, ProjectSanta.window.getWidth() - 22, 2, "exit.jpg", "exithover.jpg");
-	protected ButtonItem minimizeButton = new ButtonItem(this, ProjectSanta.window.getWidth() - 52, 2, "minimize.jpg", "minimizehover.jpg");
+	protected ButtonItem exitButton = new ButtonItem(this, this.getWidth() - 22, 2, "exit.jpg", "exithover.jpg");
+	protected ButtonItem minimizeButton = new ButtonItem(this, this.getWidth() - 52, 2, "minimize.jpg", "minimizehover.jpg");
 	
 	private final String[] NAMES;
 	
@@ -25,7 +25,8 @@ public class ListCreationPage extends Page implements InteractiveComponent {
 	
 	private TextList list = new TextList(this, 10, 10, 24, 0, false);
 	
-	public ListCreationPage(String[] names) {
+	public ListCreationPage(int x, int y, int width, int height, String[] names) {
+		super(x, y, width, height, "/menugraphics/");
 		this.NAMES = names;
 		
 		shuffleNames();
@@ -69,7 +70,7 @@ public class ListCreationPage extends Page implements InteractiveComponent {
 	public void mousePressed(MouseEvent event) {
 		super.mousePressed(event);
 		
-		ProjectSanta.window.setVisiblePage(ProjectSanta.mainPage);
+		ProjectSanta.window.clearAndAddPage(ProjectSanta.mainPage);
 	}
 
 	@Override

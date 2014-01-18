@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 
 import projectsanta.main.debug.Debug;
 
@@ -17,9 +18,9 @@ import userinterface.window.Window;
 
 /**
  * All mouse/key action methods work the same. Each one checks three things:
- * 1.) If the JFrame was acted on, otherwise...
- * 2.) If the JPanel was acted on, otherwise...
- * 3.) If the Items in the JPanel (JLabels) were acted on, otherwise...
+ * 1.) If the Window (JFrame) was acted on, otherwise...
+ * 2.) If the Pages (JPanel) in the Window were acted on, otherwise...
+ * 3.) If the Items (JLabels) in the Pages were acted on, otherwise...
  * 4.) An error message is displayed on the object that could not be found.
  */
 public final class InputHandler extends KeyAdapter implements MouseListener, MouseMotionListener, ActionListener {
@@ -33,17 +34,19 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 	@Override
 	public void mousePressed(MouseEvent event) {
 		Object source = event.getSource();
-				
+		
 		if(source == window) window.mousePressed(event);
-		else if(source == getVisiblePage()) getVisiblePage().mousePressed(event);
+		else if(source instanceof Page) {
+			getSourcePage(source).mousePressed(event);
+		}
 		else {
 			Item item = getSourceItem(source);
 			if(item instanceof InteractiveItem) {
 				InteractiveItem actItem = (InteractiveItem) item;
 				actItem.mousePressed(event);
-				getVisiblePage().handleMousePress(actItem);
+				actItem.getPage().handleMousePress(actItem);
 			}
-			else getVisiblePage().mousePressedNoninteractiveItem(event, item.getComponent().getX(), item.getComponent().getY());
+			else item.getPage().mousePressedNoninteractiveItem(event, item.getComponent().getX(), item.getComponent().getY());
 		}
 		
 		event.consume();
@@ -54,11 +57,11 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 		Object source = event.getSource();
 		
 		if(source == window) window.mouseReleased(event);
-		else if(source == getVisiblePage()) getVisiblePage().mouseReleased(event);
+		else if(source instanceof Page) getSourcePage(source).mouseReleased(event);
 		else {
 			Item item = getSourceItem(source);
 			if(item instanceof InteractiveItem) ((InteractiveItem) item).mouseReleased(event);
-			else getVisiblePage().mouseReleased(event);
+			else item.getPage().mouseReleased(event);
 		}
 		
 		event.consume();
@@ -72,11 +75,11 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 		Object source = event.getSource();
 		
 		if(source == window) window.mouseEntered(event);
-		else if(source == getVisiblePage()) getVisiblePage().mouseEntered(event);
+		else if(source instanceof Page) getSourcePage(source).mouseEntered(event);
 		else {
 			Item item = getSourceItem(source);
 			if(item instanceof InteractiveItem) ((InteractiveItem) item).mouseEntered(event);
-			else getVisiblePage().mouseEntered(event);
+			else item.getPage().mouseEntered(event);
 		}
 		
 		event.consume();
@@ -87,11 +90,11 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 		Object source = event.getSource();
 		
 		if(source == window) window.mouseDragged(event);
-		else if(source == getVisiblePage()) getVisiblePage().mouseDragged(event);
+		else if(source instanceof Page) getSourcePage(source).mouseDragged(event);
 		else {
 			Item item = getSourceItem(source);
 			if(item instanceof InteractiveItem) ((InteractiveItem) item).mouseDragged(event);
-			else getVisiblePage().mouseDragged(event);
+			else item.getPage().mouseDragged(event);
 		}
 		
 		event.consume();
@@ -102,11 +105,11 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 		Object source = event.getSource();
 		
 		if(source == window) window.mouseMoved(event);
-		else if(source == getVisiblePage()) getVisiblePage().mouseMoved(event);
+		else if(source instanceof Page) getSourcePage(source).mouseMoved(event);
 		else {
 			Item item = getSourceItem(source);
 			if(item instanceof InteractiveItem) ((InteractiveItem) item).mouseMoved(event);
-			else getVisiblePage().mouseMoved(event);
+			else item.getPage().mouseMoved(event);
 		}
 		
 		event.consume();
@@ -117,11 +120,11 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 		Object source = event.getSource();
 		
 		if(source == window) window.mouseExited(event);
-		else if(source == getVisiblePage()) getVisiblePage().mouseExited(event);
+		else if(source instanceof Page) getSourcePage(source).mouseExited(event);
 		else {
 			Item item = getSourceItem(source);
 			if(item instanceof InteractiveItem) ((InteractiveItem) item).mouseExited(event);
-			else getVisiblePage().mouseExited(event);
+			else item.getPage().mouseExited(event);
 		}
 		
 		event.consume();
@@ -132,19 +135,14 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 		Object source = event.getSource();
 		int key = event.getKeyCode();
 		
-		
-		if(key == KeyEvent.VK_ESCAPE) System.exit(0);
-		
 		if(source == window) window.keyPressed(event, key);
-		else if(source == getVisiblePage()) getVisiblePage().keyPressed(event, key);
-		else {
-			Item item = getSourceItem(source);
-			if(item instanceof InteractiveItem) {
-				InteractiveItem actItem = (InteractiveItem) item;
-				actItem.keyPressed(event, key);
-				getVisiblePage().handleKeyPress(actItem, key);
-			}
-			else getVisiblePage().keyPressed(event, key);
+		else if(source instanceof Page) {
+			getSourcePage(source).keyPressed(event, key);
+		}
+		else if(source instanceof InteractiveItem) {
+			InteractiveItem item = (InteractiveItem) getSourceItem(source);
+			item.keyPressed(event, key);
+			item.getPage().handleKeyPress(item, key);
 		}
 		
 		event.consume();
@@ -154,35 +152,53 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 	public void actionPerformed(ActionEvent event) {
 		Object source = event.getSource();
 		
-		
 		if(source == window) window.actionPerformed(event);
-		else if(source == getVisiblePage()) getVisiblePage().actionPerformed(event);
+		else if(source instanceof Page) getSourcePage(source).actionPerformed(event);
 		else {
 			Item item = getSourceItem(source);
 			if(item instanceof InteractiveItem) {
 				InteractiveItem actItem = (InteractiveItem) item;
 				actItem.actionPerformed(event);
-				getVisiblePage().handleActionEvent(actItem);
+				item.getPage().handleActionEvent(actItem);
 			}
-			else getVisiblePage().actionPerformed(event);
+			else item.getPage().actionPerformed(event);
 		}
 	}
 	
 	/**
-	 * Finds out what Item was acted on in the current visible page, and returns that Item.
+	 * Finds out what Page was acted on in the current visible Window, and returns that Page.
+	 * returns null if the Page was not acted on.
+	 * @param source
+	 * @return page
+	 */
+	private Page getSourcePage(Object source) {
+		// Finding the object that was acted on in the Page
+		for(Page page : getVisiblePages()) {
+			if(source == page) return page;
+		}
+		// Page was not acted on
+		return null;
+	}
+	
+	/**
+	 * Finds out what Item was acted on in the given Page, and returns that Item.
+	 * returns null if the Item was not acted on.
 	 * @param source
 	 * @return item
 	 */
 	private Item getSourceItem(Object source) {
-		// Finding the object that was acted on in the Page
-		for(Item item : getVisiblePage().getItems()) {
-			if(source == item.getComponent()) return item;
+		// Looking through each page
+		for(Page page : getVisiblePages()) {
+			// Finding the object that was acted on in the Page
+			for(Item item : page.getItems()) {
+				if(source == item.getComponent()) return item;
+			}
 		}
-		Debug.error("Object that was acted on was not found! Object = " + source);
+		Debug.error("Item that was acted on was not found! Object = " + source);
 		return null;
 	}
 	
-	private Page getVisiblePage() {
-		return window.getVisiblePage();
+	private ArrayList<Page> getVisiblePages() {
+		return window.getVisiblePages();
 	}
 }

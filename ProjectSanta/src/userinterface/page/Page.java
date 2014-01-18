@@ -25,20 +25,23 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 	
 	private final ArrayList<Item> ITEMS = new ArrayList<Item>();
 	
+	private final String RESOURCE_PATH;
+	
 	private int lastX, lastY; // For dragging the program around
 	
-	public Page() {
+	public Page(int x, int y, int width, int height, String resourcePath) {
 		// Visual settings
-		this.setBounds(0, 0, ProjectSanta.window.getWidth(), ProjectSanta.window.getHeight());
+		this.setBounds(x, y, width, height);
 		this.setBackground(Color.WHITE);
 		this.setLayout(null);
 		this.setFocusable(true);
 		this.setVisible(false);
+		RESOURCE_PATH = resourcePath;
 	}
 	
 	public void addItem(Item item) {
 		// Adding JLabel to JPanel (Page), and to the Page's items list
-		ProjectSanta.window.addEventListeners(item.getComponent());
+		ProjectSanta.window.addCurrentEventListeners(item.getComponent());
 		this.add(item.getComponent());
 		ITEMS.add(item);
 		item.getComponent().setVisible(true);
@@ -47,7 +50,7 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 	}
 	
 	public void removeItem(Item item) {
-		ProjectSanta.window.removeEventListeners(item.getComponent());
+		ProjectSanta.window.removeCurrentEventListeners(item.getComponent());
 		this.remove(item.getComponent());
 		ITEMS.remove(item);
 		item = null;
@@ -64,6 +67,10 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 	
 	public ArrayList<Item> getItems() {
 		return ITEMS;
+	}
+	
+	public String getResourcePath() {
+		return RESOURCE_PATH;
 	}
 	
 	/* =======================
@@ -87,14 +94,14 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 	@Override
 	public void mousePressed(MouseEvent event) {
 		// Below is for dragging purposes
-		lastX = event.getX();
-		lastY = event.getY();
+		lastX = event.getX() + this.getX();
+		lastY = event.getY() + this.getY();
 	}
 	
 	public void mousePressedNoninteractiveItem(MouseEvent event, int compX, int compY) {
 		// Below is for dragging purposes when a NoninteractableItem is pressed
-		lastX = event.getX() + compX;
-		lastY = event.getY() + compY;
+		lastX = event.getX() + this.getX() + compX;
+		lastY = event.getY() + this.getY() + compY;
 		
 		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}

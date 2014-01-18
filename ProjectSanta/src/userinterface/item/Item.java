@@ -12,13 +12,11 @@ import userinterface.page.Page;
 
 public abstract class Item {
 	
-	protected Page page;
+	protected final Page PAGE;
 	protected int xPos, yPos;
 	
-	protected final String PATH = "/menugraphics/";
-	
 	public Item(Page page, int xPos, int yPos) {
-		this.page = page;
+		this.PAGE = page;
 		this.xPos = xPos;
 		this.yPos = yPos;
 	}
@@ -44,6 +42,10 @@ public abstract class Item {
 		int width = widestCharWidth * charLength;
 		int height = (int) (font.getSize() * ProjectSanta.FONT_SIZE_RATIO);
 		textField.setBounds(xPos, yPos, width, height);
+	}
+	
+	public Page getPage() {
+		return PAGE;
 	}
 	
 	abstract public Component getComponent();

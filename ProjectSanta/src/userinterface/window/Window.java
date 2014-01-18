@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -21,7 +22,7 @@ public class Window extends JFrame implements InteractiveComponent {
 	private static final long serialVersionUID = 1L;
 	
 	private InputHandler inputHandler = new InputHandler(this);
-	private Page visiblePage; // The page being viewed by the user
+	private ArrayList<Page> visiblePages = new ArrayList<Page>(); // The pages being viewed by the user
 	
 	public Window(int width, int height) {
 		this.setSize(width, height);
@@ -44,9 +45,12 @@ public class Window extends JFrame implements InteractiveComponent {
 		// Adding the listener
 		super.addMouseListener(listener);
 				
-		// Adding the listener to the page and its items
-		visiblePage.addMouseListener(listener);
-		for(Item item : visiblePage.getItems()) item.getComponent().addMouseListener(listener);
+		// Adding the listener to all the pages and their items
+		for(Page page : visiblePages) {
+			page.addMouseListener(listener);
+			for(Item item : page.getItems()) item.getComponent().addMouseListener(listener);
+		}
+		
 	}
 	
 	@Override
@@ -54,30 +58,33 @@ public class Window extends JFrame implements InteractiveComponent {
 		// Adding the listener to this window
 		super.addMouseMotionListener(listener);
 				
-		// Adding the listener to the page and its items
-		visiblePage.addMouseMotionListener(listener);
-		for(Item item : visiblePage.getItems()) item.getComponent().addMouseMotionListener(listener);
+		// Adding the listener to all the pages and their items
+		for(Page page : visiblePages) {
+			page.addMouseMotionListener(listener);
+			for(Item item : page.getItems()) item.getComponent().addMouseMotionListener(listener);
+		}
 	}
 	
 	@Override
 	public void addKeyListener(KeyListener listener) {
 		// Adding the listener
 		super.addKeyListener(listener);
-				
-		// Adding the listener to the page and its items
-		visiblePage.addKeyListener(listener);
-		for(Item item : visiblePage.getItems()) item.getComponent().addKeyListener(listener);
+		
+		// Adding the listener to all the pages and their items
+		for(Page page : visiblePages) {
+			page.addKeyListener(listener);
+			for(Item item : page.getItems()) item.getComponent().addKeyListener(listener);
+		}
 	}
 	
-	public void addEventListeners(Component component) {
-		// JTextField's don't use KeyListeners for the <enter> key, they use 
-		// ActionListener, so we will use that instead.
+	public void addCurrentEventListeners(Component component) {
 		if(!(component instanceof JTextField)) {
 			// Adding key listeners
 			for(KeyListener listener : this.getKeyListeners()) component.addKeyListener(listener);
 		}
 		else {
-			// Adding an ActionListener to that specific JTextField
+			// JTextField's don't use KeyListeners for the <enter> key, they use 
+			// ActionListener, so we'll use that instead.
 			((JTextField) component).addActionListener(inputHandler);
 		}
 		
@@ -88,7 +95,7 @@ public class Window extends JFrame implements InteractiveComponent {
 		for(MouseMotionListener listener : this.getMouseMotionListeners()) component.addMouseMotionListener(listener);
 	}
 	
-	public void removeEventListeners(Component component) {
+	public void removeCurrentEventListeners(Component component) {
 		// Removing mouse Listeners
 		while(component.getMouseListeners().length > 0) component.removeMouseListener(component.getMouseListeners()[0]);
 		
@@ -100,9 +107,9 @@ public class Window extends JFrame implements InteractiveComponent {
 	}
 	
 	public void addPage(Page page) {
-		addEventListeners(page);
+		addCurrentEventListeners(page);
 		this.add(page);
-		visiblePage = page;
+		visiblePages.add(page);
 		page.setVisible(true);
 		
 		refreshScreen();
@@ -112,35 +119,52 @@ public class Window extends JFrame implements InteractiveComponent {
 	public void removePage(Page page) {
 		if(page == null) return;
 		
-		removeEventListeners(page);
+		removeCurrentEventListeners(page);
 		this.remove(page);
+		visiblePages.remove(page);
 		page = null;
-		visiblePage = null;
 		
 		refreshScreen();
 	}
 	
-	public void setVisiblePage(Page page) {
-		removePage(visiblePage);
-		addPage(page);
+	public void removePages() {
+		for(int x = 0; x < visiblePages.size(); x++) removePage(visiblePages.get(x));
+	}
+	
+	public void clearAndAddPage(Page page) {
+		// Clears the screen of current pages, and adds the
+		// one specified page to the screen
+		ArrayList<Page> pageHolder = new ArrayList<Page>();
+		pageHolder.add(page);
+		setVisiblePages(pageHolder);
+	}
+	
+	public void setVisiblePages(ArrayList<Page> pages) {
+		// Removing the old pages
+		removePages();
+		
+		// Adding the new pages
+		for(Page page : pages) addPage(page);
 		
 		refreshScreen();
+		requestFocus();
 	}
 	
 	public void refreshScreen() {
-		if(visiblePage == null) return;
+		if(visiblePages.size() <= 0) return;
 		
-		// Refreshing screen
+		// Refreshing screen by repainting each page
 		this.repaint();
-		visiblePage.repaint();
+		for(Page page : visiblePages) page.repaint();
 	}
 	
 	public void getFocus() {
-		if(visiblePage == null) return;
-		
 		// Getting focus
 		this.requestFocus();
-		visiblePage.requestFocus();
+	}
+	
+	public ArrayList<Page> getVisiblePages() {
+		return visiblePages;
 	}
 	
 	/* =======================
@@ -170,9 +194,5 @@ public class Window extends JFrame implements InteractiveComponent {
 	public void keyPressed(KeyEvent event, int key) {}
 
 	@Override
-	public void actionPerformed(ActionEvent event) {}
-	
-	public Page getVisiblePage() {
-		return visiblePage;
-	}
+	public void actionPerformed(ActionEvent event) {}	
 }

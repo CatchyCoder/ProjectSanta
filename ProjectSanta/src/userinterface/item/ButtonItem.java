@@ -32,8 +32,8 @@ public class ButtonItem extends InteractiveItem {
 		
 		try {
 			// Loading images
-			exitState = new ImageIcon(getClass().getResource(this.PATH + nonHoverName));
-			enterState = new ImageIcon(getClass().getResource(this.PATH + hoverName));
+			exitState = new ImageIcon(getClass().getResource(page.getResourcePath() + nonHoverName));
+			enterState = new ImageIcon(getClass().getResource(page.getResourcePath() + hoverName));
 			
 			// Visual settings
 			BUTTON.setIcon(exitState);
