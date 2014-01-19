@@ -127,27 +127,26 @@ public class Window extends JFrame implements InteractiveComponent {
 		refreshScreen();
 	}
 	
-	public void removePages() {
+	public void removeAllPages() {
 		for(int x = 0; x < visiblePages.size(); x++) removePage(visiblePages.get(x));
 	}
 	
-	public void clearAndAddPage(Page page) {
+	public void setPage(Page page) {
 		// Clears the screen of current pages, and adds the
 		// one specified page to the screen
 		ArrayList<Page> pageHolder = new ArrayList<Page>();
 		pageHolder.add(page);
-		setVisiblePages(pageHolder);
+		setPages(pageHolder);
 	}
 	
-	public void setVisiblePages(ArrayList<Page> pages) {
+	public void setPages(ArrayList<Page> pages) {
 		// Removing the old pages
-		removePages();
+		removeAllPages();
 		
 		// Adding the new pages
 		for(Page page : pages) addPage(page);
 		
 		refreshScreen();
-		requestFocus();
 	}
 	
 	public void refreshScreen() {
@@ -156,6 +155,15 @@ public class Window extends JFrame implements InteractiveComponent {
 		// Refreshing screen by repainting each page
 		this.repaint();
 		for(Page page : visiblePages) page.repaint();
+	}
+	
+	@Override
+	public void setVisible(boolean value) {
+		this.setVisible(value);
+		if(value) {
+			this.requestFocus();
+			this.refreshScreen();
+		}
 	}
 	
 	public void getFocus() {

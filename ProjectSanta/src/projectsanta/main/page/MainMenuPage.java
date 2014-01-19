@@ -1,6 +1,7 @@
 package projectsanta.main.page;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -18,6 +19,7 @@ import userinterface.item.TextBoxItem;
 import userinterface.item.TextItem;
 import userinterface.page.Page;
 import userinterface.util.TextList;
+import userinterface.window.Window;
 
 public class MainMenuPage extends Page {
 	
@@ -26,39 +28,37 @@ public class MainMenuPage extends Page {
 	protected ButtonItem exitButton = new ButtonItem(this, this.getWidth() - 22, 2, "exit.JPG", "exithover.JPG");
 	protected ButtonItem minimizeButton = new ButtonItem(this, this.getWidth() - 52, 2, "minimize.JPG", "minimizehover.JPG");
 	
-	public MainMenuPage(int x, int y, int width, int height) {
-		super(x, y, width, height, "/menugraphics/");
-	}
-	
 	// The title
-	private TextItem title = new TextItem(this, 20, 20, "Secret Santa", 42);
+	private TextItem title = new TextItem(this, 20, 20, "Secret Santa", new Font(ProjectSanta.FONT_NAME, Font.BOLD, 42));
 	
 	// A prompt for the text box
-	private TextItem textBoxPrompt = new TextItem(this, 10, 100, "Enter A Name:", 24);
+	private TextItem textBoxPrompt = new TextItem(this, 10, 100, "Enter A Name:", new Font(ProjectSanta.FONT_NAME, Font.PLAIN, 24));
 	
 	// Text box to enter names
-	private TextBoxItem textBox = new TextBoxItem(this, textBoxPrompt.getComponent().getX(), textBoxPrompt.getComponent().getY() + 35, 10, 40);
+	private TextBoxItem textBox = new TextBoxItem(this, textBoxPrompt.getComponent().getX(), textBoxPrompt.getComponent().getY() + 35, 10, new Font(ProjectSanta.FONT_NAME, Font.PLAIN, 40));
 	
 	// List to display the names
-	private TextList list = new TextList(this, 50, 200, 24, 0, true);
+	private TextList list = new TextList(this, 50, 200, new Font(ProjectSanta.FONT_NAME, Font.PLAIN, 24), 0);
 	
 	// Button to randomize the list
-	private ButtonItem createButton = new ButtonItem(this, 400, 400, "Generate List", 30, Color.RED);
+	private ButtonItem createButton = new ButtonItem(this, 400, 400, "Generate List", new Font(ProjectSanta.FONT_NAME, Font.BOLD, 30), Color.RED);
+	
+	public MainMenuPage(Window window, int x, int y, int width, int height) {
+		super(window, x, y, width, height, "/menugraphics/");
+	}
 	
 	@Override
 	public void handleMousePress(InteractiveItem item) {
 		super.handleMousePress(item);
 		
 		// Looking through the items in the list
-		if(list.isEditable()) {
-			for(int x = 0; x < list.getListItems().size(); x++) {
-				Item buttonItem = list.getListButtons().get(x);
-				
-				// If an item button was pressed, remove the item
-				if(item == buttonItem) {
-					list.removeListItem(list.getListButtons().indexOf(buttonItem));
-					break;
-				}
+		for(int x = 0; x < list.getListButtons().size(); x++) {
+			Item buttonItem = list.getListButtons().get(x);
+			
+			// If an item button was pressed, remove the item
+			if(item == buttonItem) {
+				list.removeListItem(list.getListButtons().indexOf(buttonItem));
+				break;
 			}
 		}
 		
@@ -73,7 +73,7 @@ public class MainMenuPage extends Page {
 				while(!names[x].startsWith(".")) names[x] = names[x].substring(1, names[x].length()); // Removes the number
 				names[x] = names[x].substring(3, names[x].length()); // Removes the symbols ".) " (and following space)
 			}
-			ProjectSanta.window.addPage(new ListCreationPage(800, 0, 800, 500, names));
+			ProjectSanta.window.addPage(new ListCreationPage(this.getWindow(), 800, 0, 800, 500, names));
 		}
 		if(item == exitButton) System.exit(0);
 		else if(item == minimizeButton) ProjectSanta.window.setExtendedState(JFrame.ICONIFIED);

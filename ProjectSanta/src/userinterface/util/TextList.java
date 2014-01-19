@@ -1,6 +1,7 @@
 package userinterface.util;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -13,19 +14,25 @@ import userinterface.page.Page;
 public class TextList {
 	
 	private Page page;
-	private int xPos, yPos, fontSize, spacing;
-	private boolean editable;
+	private int xPos, yPos, spacing;
+	private Font font;
+	private String nonHoverPath, hoverPath;
 	
 	private final ArrayList<Item> LIST_ITEMS = new ArrayList<Item>();
 	private final ArrayList<Item> LIST_BUTTONS = new ArrayList<Item>();
 	
-	public TextList(Page page, int xPos, int yPos, int fontSize, int spacing, boolean editable) {
+	public TextList(Page page, int xPos, int yPos, Font font, int spacing, String nonHoverPath, String hoverPath) {
 		this.page = page;
 		this.xPos = xPos;
 		this.yPos = yPos;
-		this.fontSize = fontSize;
+		this.font = font;
 		this.spacing = spacing;
-		this.editable = editable;
+		this.nonHoverPath = nonHoverPath;
+		this.hoverPath = hoverPath;
+	}
+	
+	public TextList(Page page, int xPos, int yPos, Font font, int spacing) {
+		this(page, xPos, yPos, font, spacing, "", "");
 	}
 	
 	public void addListItem(String text) {
@@ -38,9 +45,9 @@ public class TextList {
 		else yValue = yPos + (LIST_ITEMS.get(0).getComponent().getHeight() * listSize + spacing * listSize);
 		
 		// Creating the list item
-		LIST_ITEMS.add(new TextItem(page, xPos, yValue, text, fontSize));
-		// Creating the list button, but only if the list is editable
-		if(editable) LIST_BUTTONS.add(new ButtonItem(page, xPos - 40, yValue, "exit.jpg", "exithover.jpg"));
+		LIST_ITEMS.add(new TextItem(page, xPos, yValue, text, font));
+		// Creating the list button, but only if they provided image names (meaning the list is editable)
+		if(!(nonHoverPath.equals("") || hoverPath.equals(""))) LIST_BUTTONS.add(new ButtonItem(page, xPos - 40, yValue, "exit.jpg", "exithover.jpg"));
 		
 		// Need to refresh the page in order for the items to appear
 		page.repaint();
@@ -71,14 +78,6 @@ public class TextList {
 		}
 		
 		page.repaint();
-	}
-	
-	public void setEditable(boolean value) {
-		editable = value;
-	}
-	
-	public boolean isEditable() {
-		return editable;
 	}
 	
 	public ArrayList<Item> getListItems(){

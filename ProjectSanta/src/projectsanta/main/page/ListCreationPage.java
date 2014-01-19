@@ -1,5 +1,6 @@
 package projectsanta.main.page;
 
+import java.awt.Font;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
@@ -11,6 +12,7 @@ import userinterface.item.ButtonItem;
 import userinterface.item.InteractiveItem;
 import userinterface.page.Page;
 import userinterface.util.TextList;
+import userinterface.window.Window;
 
 public class ListCreationPage extends Page implements InteractiveComponent {
 	
@@ -23,10 +25,10 @@ public class ListCreationPage extends Page implements InteractiveComponent {
 	
 	private final int SWAPS = (int) Math.pow(10, 5);
 	
-	private TextList list = new TextList(this, 10, 10, 24, 0, false);
+	private TextList list = new TextList(this, 10, 10, new Font(ProjectSanta.FONT_NAME, Font.PLAIN, 24), 0);
 	
-	public ListCreationPage(int x, int y, int width, int height, String[] names) {
-		super(x, y, width, height, "/menugraphics/");
+	public ListCreationPage(Window window, int x, int y, int width, int height, String[] names) {
+		super(window, x, y, width, height, "/menugraphics/");
 		this.NAMES = names;
 		
 		shuffleNames();
@@ -70,7 +72,7 @@ public class ListCreationPage extends Page implements InteractiveComponent {
 	public void mousePressed(MouseEvent event) {
 		super.mousePressed(event);
 		
-		ProjectSanta.window.clearAndAddPage(ProjectSanta.mainPage);
+		ProjectSanta.window.setPage(ProjectSanta.mainPage);
 	}
 
 	@Override

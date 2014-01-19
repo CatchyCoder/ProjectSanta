@@ -2,17 +2,12 @@ package userinterface.item;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.event.KeyEvent;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import projectsanta.main.ProjectSanta;
-
-import userinterface.InteractiveComponent;
 import userinterface.page.Page;
 
 public class ButtonItem extends InteractiveItem {
@@ -47,7 +42,7 @@ public class ButtonItem extends InteractiveItem {
 		}
 	}
 	
-	public ButtonItem(Page page, int xPos, int yPos, String text, int fontSize, Color color) {
+	public ButtonItem(Page page, int xPos, int yPos, String text, Font font, Color color) {
 		super(page, xPos, yPos);
 		
 		imageUse = false;
@@ -55,7 +50,7 @@ public class ButtonItem extends InteractiveItem {
 		
 		try {
 			// Visual settings
-			this.setFont(fontSize);
+			BUTTON.setFont(font);
 			BUTTON.setText(text);
 			BUTTON.setForeground(Color.BLACK);
 			BUTTON.setCursor(new Cursor(Cursor.HAND_CURSOR));

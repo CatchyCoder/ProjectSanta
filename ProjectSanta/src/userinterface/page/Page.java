@@ -7,30 +7,28 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import projectsanta.main.ProjectSanta;
-
 import userinterface.InteractiveComponent;
-import userinterface.item.ButtonItem;
 import userinterface.item.InteractiveItem;
 import userinterface.item.Item;
-import userinterface.item.NoninteractiveItem;
+import userinterface.window.Window;
 
 public abstract class Page extends JPanel implements InteractiveComponent {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private final Window WINDOW;
 	private final ArrayList<Item> ITEMS = new ArrayList<Item>();
 	
 	private final String RESOURCE_PATH;
 	
 	private int lastX, lastY; // For dragging the program around
 	
-	public Page(int x, int y, int width, int height, String resourcePath) {
+	public Page(Window window, int x, int y, int width, int height, String resourcePath) {
 		// Visual settings
+		this.WINDOW = window;
 		this.setBounds(x, y, width, height);
 		this.setBackground(Color.WHITE);
 		this.setLayout(null);
@@ -71,6 +69,10 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 	
 	public String getResourcePath() {
 		return RESOURCE_PATH;
+	}
+	
+	public Window getWindow() {
+		return WINDOW;
 	}
 	
 	/* =======================
@@ -122,7 +124,7 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 		// Below adds the ability to drag program around on screen
 		int x = event.getXOnScreen();
 		int y = event.getYOnScreen();
-		ProjectSanta.window.setLocation(x - lastX, y - lastY);
+		WINDOW.setLocation(x - lastX, y - lastY);
 		resetItemStates(event);
 	}
 	
