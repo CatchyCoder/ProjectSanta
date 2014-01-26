@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import projectsanta.main.debug.Debug;
 
+import userinterface.DraggableComponent;
 import userinterface.item.InteractiveItem;
 import userinterface.item.Item;
 import userinterface.page.Page;
@@ -35,9 +36,14 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 	public void mousePressed(MouseEvent event) {
 		Object source = event.getSource();
 		
-		if(source == window) window.mousePressed(event);
+		if(source == window) {
+			window.mousePressed(event);
+			window.startDrag(event);
+		}
 		else if(source instanceof Page) {
-			getSourcePage(source).mousePressed(event);
+			Page page = getSourcePage(source);
+			page.mousePressed(event);
+			page.startDrag(event);
 		}
 		else {
 			Item item = getSourceItem(source);
@@ -46,7 +52,10 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 				actItem.mousePressed(event);
 				actItem.getPage().handleMousePress(actItem);
 			}
-			else item.getPage().mousePressedNoninteractiveItem(event, item.getComponent().getX(), item.getComponent().getY());
+			else {
+				item.getPage().mousePressed(event);
+				item.getPage().startDragItem(event, item.getComponent().getLocation().x, item.getComponent().getLocation().y);
+			}
 		}
 		
 		event.consume();
@@ -56,12 +65,22 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 	public void mouseReleased(MouseEvent event) {
 		Object source = event.getSource();
 		
-		if(source == window) window.mouseReleased(event);
-		else if(source instanceof Page) getSourcePage(source).mouseReleased(event);
+		if(source == window) {
+			window.mouseReleased(event);
+			window.stopDrag(event);
+		}
+		else if(source instanceof Page) {
+			Page page = getSourcePage(source);
+			page.mouseReleased(event);
+			page.stopDrag(event);
+		}
 		else {
 			Item item = getSourceItem(source);
 			if(item instanceof InteractiveItem) ((InteractiveItem) item).mouseReleased(event);
-			else item.getPage().mouseReleased(event);
+			else {
+				item.getPage().mouseReleased(event);
+				item.getPage().stopDrag(event);
+			}
 		}
 		
 		event.consume();
@@ -89,12 +108,22 @@ public final class InputHandler extends KeyAdapter implements MouseListener, Mou
 	public void mouseDragged(MouseEvent event) {
 		Object source = event.getSource();
 		
-		if(source == window) window.mouseDragged(event);
-		else if(source instanceof Page) getSourcePage(source).mouseDragged(event);
+		if(source == window) {
+			window.mouseDragged(event);
+			window.drag(event);
+		}
+		else if(source instanceof Page) {
+			Page page = getSourcePage(source);
+			page.mouseDragged(event);
+			page.drag(event);
+		}
 		else {
 			Item item = getSourceItem(source);
 			if(item instanceof InteractiveItem) ((InteractiveItem) item).mouseDragged(event);
-			else item.getPage().mouseDragged(event);
+			else {
+				item.getPage().mouseDragged(event);
+				item.getPage().drag(event);
+			}
 		}
 		
 		event.consume();

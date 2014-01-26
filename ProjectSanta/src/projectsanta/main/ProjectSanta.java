@@ -8,14 +8,12 @@ import userinterface.window.Window;
 public class ProjectSanta {
 	
 	/* 									TODO:
-	 *   + Make Window class be able to drag around the screen
 	 *   * Update TextList so that it has only one constructor, but you
 	 *   can call setEditButton(path, path) or setEditButton(text) to 
 	 *   control the buttons, and use setEditable(boolean) to show the 
 	 *   buttons or not.
 	 *   * Update TextList so that you can control where the edit buttons
 	 *   will be placed, maybe add parameter to setEditButton()?
-	 *   + Come up with something to add ability to drag items around inside the application
 	 */
 	
 	public static Dimension SIZE = new Dimension(800 * 2, 600);

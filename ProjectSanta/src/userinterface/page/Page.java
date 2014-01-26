@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import projectsanta.main.ProjectSanta;
+import userinterface.DraggableComponent;
 import userinterface.InteractiveComponent;
 import userinterface.item.InteractiveItem;
 import userinterface.item.Item;
 import userinterface.window.Window;
 
-public abstract class Page extends JPanel implements InteractiveComponent {
+public abstract class Page extends JPanel implements InteractiveComponent, DraggableComponent {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -94,23 +95,30 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 	public void handleActionEvent(InteractiveItem item) {}
 	
 	@Override
-	public void mousePressed(MouseEvent event) {
+	public void mousePressed(MouseEvent event) {}
+	
+	@Override
+	public void startDrag(MouseEvent event) {
 		// Below is for dragging purposes
-		lastX = event.getX() + this.getX();
-		lastY = event.getY() + this.getY();
+		lastX = event.getX() + this.getLocation().x;
+		lastY = event.getY() + this.getLocation().y;
+		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 	
-	public void mousePressedNoninteractiveItem(MouseEvent event, int compX, int compY) {
+	public void startDragItem(MouseEvent event, int compX, int compY) {
 		// Below is for dragging purposes when a NoninteractableItem is pressed
-		lastX = event.getX() + this.getX() + compX;
-		lastY = event.getY() + this.getY() + compY;
-		
+		lastX = event.getX() + this.getLocation().x + compX;
+		lastY = event.getY() + this.getLocation().y + compY;
 		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 	
 	@Override
-	public void mouseReleased(MouseEvent event) {
+	public void mouseReleased(MouseEvent event) {}
+	
+	@Override
+	public void stopDrag(MouseEvent event) {
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		this.repaint();
 	}
 	
 	@Override
@@ -120,12 +128,17 @@ public abstract class Page extends JPanel implements InteractiveComponent {
 	public void mouseExited(MouseEvent event) {}
 	
 	@Override
-	public void mouseDragged(MouseEvent event) {
+	public void mouseDragged(MouseEvent event) {}
+	
+	@Override
+	public void drag(MouseEvent event) {
 		// Below adds the ability to drag program around on screen
 		int x = event.getXOnScreen();
 		int y = event.getYOnScreen();
 		WINDOW.setLocation(x - lastX, y - lastY);
 		resetItemStates(event);
+		
+		System.out.println("X: " + x + "\tlastX: " + lastX);
 	}
 	
 	@Override

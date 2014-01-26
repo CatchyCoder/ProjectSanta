@@ -1,6 +1,7 @@
 package userinterface.window;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -12,17 +13,20 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
+import userinterface.DraggableComponent;
 import userinterface.InteractiveComponent;
 import userinterface.input.InputHandler;
 import userinterface.item.Item;
 import userinterface.page.Page;
 
-public class Window extends JFrame implements InteractiveComponent {
+public class Window extends JFrame implements InteractiveComponent, DraggableComponent{
 	
 	private static final long serialVersionUID = 1L;
 	
 	private InputHandler inputHandler = new InputHandler(this);
 	private ArrayList<Page> visiblePages = new ArrayList<Page>(); // The pages being viewed by the user
+	
+	private int lastX, lastY; // For dragging the program around
 	
 	public Window(int width, int height) {
 		this.setSize(width, height);
@@ -159,7 +163,7 @@ public class Window extends JFrame implements InteractiveComponent {
 	
 	@Override
 	public void setVisible(boolean value) {
-		this.setVisible(value);
+		super.setVisible(value);
 		if(value) {
 			this.requestFocus();
 			this.refreshScreen();
@@ -182,9 +186,24 @@ public class Window extends JFrame implements InteractiveComponent {
 	
 	@Override
 	public void mousePressed(MouseEvent event) {}
+	
+	@Override
+	public void startDrag(MouseEvent event) {
+		// Below is for dragging purposes
+		lastX = event.getX();
+		lastY = event.getY();
+		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		System.out.println("START");
+	}
 
 	@Override
 	public void mouseReleased(MouseEvent event) {}
+	
+	@Override
+	public void stopDrag(MouseEvent event) {
+		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		this.repaint();
+	}
 
 	@Override
 	public void mouseEntered(MouseEvent event) {}
@@ -194,6 +213,15 @@ public class Window extends JFrame implements InteractiveComponent {
 
 	@Override
 	public void mouseDragged(MouseEvent event) {}
+	
+	@Override
+	public void drag(MouseEvent event) {
+		// Below adds the ability to drag program around on screen
+		int x = event.getXOnScreen();
+		int y = event.getYOnScreen();
+		this.setLocation(x - lastX, y - lastY);
+		for(Page page : visiblePages) page.resetItemStates(event);
+	}
 
 	@Override
 	public void mouseMoved(MouseEvent event) {}

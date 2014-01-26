@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 
 import userinterface.page.Page;
 
-public class GraphicalItem extends Item {
+public class GraphicalItem extends NoninteractiveItem {
 	
 	private final JLabel GRAPHIC = new JLabel();
 	
