@@ -41,7 +41,7 @@ public class MainMenuPage extends Page {
 	private TextList list = new TextList(this, 50, 200, new Font(ProjectSanta.FONT_NAME, Font.PLAIN, 24), 0);
 	
 	// Button to randomize the list
-	private ButtonItem createButton = new ButtonItem(this, 400, 400, "Generate List", new Font(ProjectSanta.FONT_NAME, Font.BOLD, 30), Color.RED);
+	private ButtonItem createButton = new ButtonItem(this, 400, 400, "Generate List", new Font(ProjectSanta.FONT_NAME, Font.BOLD, 30), Color.BLACK, Color.RED);
 	
 	public MainMenuPage(Window window, int x, int y, int width, int height) {
 		super(window, x, y, width, height, "/menugraphics/");
