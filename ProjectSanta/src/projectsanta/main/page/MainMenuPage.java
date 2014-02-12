@@ -95,6 +95,11 @@ public class MainMenuPage extends Page {
 	}
 	
 	@Override
+	public void handleKeyPress(InteractiveItem item, int key) {
+		System.out.println("TERDFSFREFS");
+	}
+	
+	@Override
 	public void mousePressed(MouseEvent event) {
 		super.mousePressed(event);
 	}
